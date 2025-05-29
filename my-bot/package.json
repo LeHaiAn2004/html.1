@@ -1,0 +1,28 @@
+{
+  "name": "tuan",
+  "version": "1.0.0",
+  "description": "no",
+  "main": "index.js",
+  "engines": {
+    "node": ">= 8 < 11"
+  },
+  "dependencies": {
+    "botpress": "botpress start",
+    "@botpress/audience": "botpress start",
+    "@botpress/builtins": "botpress start",
+    "@botpress/nlu": "botpress start",
+    "@botpress/skill-choice": "botpress start",
+    "@botpress/hitl": "botpress start",
+    "@botpress/channel-web": "botpress start",
+    "jsdoc-api": "^4.0.3",
+    "lodash": "^4.17.10",
+    "yn": "^2.0.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "ghost-sync": "botpress ghost-sync",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "tuan",
+  "license": "AGPL-3.0-only"
+}

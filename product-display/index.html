@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartSell - Mua sắm trực tuyến</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Thanh điều hướng -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="#" onclick="goBackToPublic()">SmartSell</a>
+            </div>
+            <div class="nav-search">
+                <input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm..." oninput="searchProducts()">
+                <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="nav-actions">
+                <div class="nav-item">
+                    <button id="accountBtn" onclick="toggleAccountMenu()"><i class="fas fa-user"></i> Tài khoản</button>
+                    <div id="accountMenu" class="dropdown-menu">
+                        <button onclick="goToRegister()">Đăng ký</button>
+                        <button onclick="goToLogin()">Đăng nhập</button>
+                        <button onclick="goToAdminLogin()">Đăng nhập Admin</button>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <button id="cartBtn" onclick="goToCart()"><i class="fas fa-shopping-cart"></i> Giỏ hàng</button>
+                </div>
+                <div class="nav-item">
+                    <button id="ordersBtn" onclick="goToOrders()"><i class="fas fa-box"></i> Đơn hàng</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Thanh danh mục -->
+    <div class="category-bar">
+        <button onclick="filterProducts('all')">Tất cả</button>
+        <button onclick="filterProducts('normal')">Bình thường</button>
+        <button onclick="filterProducts('featured')">Nổi bật</button>
+        <button onclick="filterProducts('promotion')">Khuyến mãi</button>
+    </div>
+
+    <!-- Cửa sổ chatbot -->
+    <div id="chatbotContainer">
+        <div id="chatbotHeader" onclick="toggleChatbot()">
+            <span><i class="fas fa-comment-alt"></i> Hỗ trợ khách hàng</span>
+            <span id="chatbotToggleIcon"><i class="fas fa-chevron-up"></i></span>
+        </div>
+        <div id="chatbotBody" style="display: none;">
+            <div id="chatbotMessages"></div>
+            <div class="chatbot-input-container">
+                <input type="text" id="chatbotInput" placeholder="Nhập câu hỏi của bạn..." onkeypress="if(event.key === 'Enter') sendMessage()">
+                <button onclick="sendMessage()">Gửi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Các trang -->
+    <div id="publicPage">
+        <div id="publicProductList" class="product-grid"></div>
+    </div>
+
+    <div id="registerPage" style="display: none;">
+        <div class="auth-container">
+            <h2>Đăng ký tài khoản</h2>
+            <div id="registerError" class="error-message"></div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regUsername"><i class="fas fa-user"></i> Tên đăng nhập</label>
+                    <input type="text" id="regUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword"><i class="fas fa-lock"></i> Mật khẩu</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <button type="submit" class="auth-btn">Đăng ký</button>
+                <button type="button" class="back-btn" onclick="goBackToPublic()">Quay lại</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="loginPage" style="display: none;">
+        <div class="auth-container">
+            <h2>Đăng nhập</h2>
+            <div id="loginError" class="error-message"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Tên đăng nhập</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Mật khẩu</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="auth-btn">Đăng nhập</button>
+                <button type="button" class="back-btn" onclick="goBackToPublic()">Quay lại</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="userPage" style="display: none;">
+        <div class="page-header">
+            <h2>Danh sách sản phẩm</h2>
+            <div class="user-actions">
+                <button onclick="userLogout()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
+            </div>
+        </div>
+        <div id="userProductList" class="product-grid"></div>
+    </div>
+
+    <div id="cartPage" style="display: none;">
+        <div class="page-header">
+            <h2>Giỏ hàng của bạn</h2>
+        </div>
+        <div id="cartList" class="cart-list"></div>
+        <div class="cart-actions">
+            <button onclick="checkout()" class="auth-btn"><i class="fas fa-money-check-alt"></i> Thanh toán</button>
+            <button onclick="goBackToUser()" class="back-btn"><i class="fas fa-arrow-left"></i> Quay lại</button>
+        </div>
+    </div>
+
+    <div id="orderPage" style="display: none;">
+        <div class="page-header">
+            <h2>Đơn hàng của bạn</h2>
+        </div>
+        <div id="orderList"></div>
+        <button onclick="goBackToUser()" class="back-btn"><i class="fas fa-arrow-left"></i> Quay lại</button>
+    </div>
+
+    <div id="adminLoginPage" style="display: none;">
+        <div class="auth-container">
+            <h2>Đăng nhập Admin</h2>
+            <div id="adminLoginError" class="error-message"></div>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="adminUsername"><i class="fas fa-user"></i> Tên đăng nhập</label>
+                    <input type="text" id="adminUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword"><i class="fas fa-lock"></i> Mật khẩu</label>
+                    <input type="password" id="adminPassword" required>
+                </div>
+                <button type="submit" class="auth-btn">Đăng nhập</button>
+                <button type="button" class="back-btn" onclick="goBackToPublic()">Quay lại</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="adminPage" style="display: none;">
+        <div class="page-header">
+            <h2>Quản lý sản phẩm</h2>
+            <div class="admin-actions">
+                <button onclick="viewUsers()"><i class="fas fa-users"></i> Quản lý tài khoản</button>
+                <button onclick="viewAllOrders()"><i class="fas fa-box"></i> Quản lý đơn hàng</button>
+                <button onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
+            </div>
+        </div>
+        <div id="adminProductList" class="product-grid"></div>
+        <div class="form-container">
+            <h3>Thêm sản phẩm mới</h3>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label for="productName"><i class="fas fa-tag"></i> Tên sản phẩm</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-group">
+                    <label for="productType"><i class="fas fa-list"></i> Loại sản phẩm</label>
+                    <select id="productType" required>
+                        <option value="normal">Bình thường</option>
+                        <option value="featured">Nổi bật</option>
+                        <option value="promotion">Khuyến mãi</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productCategory"><i class="fas fa-folder"></i> Danh mục</label>
+                    <select id="productCategory" required>
+                        <!-- Danh mục sẽ được thêm động từ JavaScript -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice"><i class="fas fa-money-bill"></i> Giá</label>
+                    <input type="number" id="productPrice" required>
+                </div>
+                <div class="form-group">
+                    <label for="productImage"><i class="fas fa-image"></i> URL hình ảnh</label>
+                    <input type="text" id="productImage" required>
+                </div>
+                <div class="form-group">
+                    <label for="productFeatures"><i class="fas fa-cogs"></i> Tính năng</label>
+                    <input type="text" id="productFeatures" required>
+                </div>
+                <button type="submit" class="auth-btn"><i class="fas fa-plus"></i> Thêm sản phẩm</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="userManagementPage" style="display: none;">
+        <div class="page-header">
+            <h2>Quản lý tài khoản</h2>
+        </div>
+        <div id="userList"></div>
+        <button onclick="goBackToAdmin()" class="back-btn"><i class="fas fa-arrow-left"></i> Quay lại</button>
+    </div>
+
+    <div id="orderManagementPage" style="display: none;">
+        <div class="page-header">
+            <h2>Quản lý đơn hàng</h2>
+        </div>
+        <div class="filter-bar">
+            <label>Lọc theo người dùng (ID):</label>
+            <input type="number" id="filterUserId" placeholder="Nhập ID người dùng (để trống để xem tất cả)">
+            <button onclick="viewAllOrders()" class="auth-btn">Lọc</button>
+        </div>
+        <div id="adminOrderList"></div>
+        <button onclick="goBackToAdmin()" class="back-btn"><i class="fas fa-arrow-left"></i> Quay lại</button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>SmartSell</h4>
+                <p>Mua sắm trực tuyến dễ dàng và tiện lợi!</p>
+            </div>
+            <div class="footer-section">
+                <h4>Liên hệ</h4>
+                <p>Email: support@smartsell.com</p>
+                <p>Hotline: 1900 1234</p>
+            </div>
+            <div class="footer-section">
+                <h4>Theo dõi chúng tôi</h4>
+                <p><a href="#"><i class="fab fa-facebook"></i> Facebook</a></p>
+                <p><a href="#"><i class="fab fa-instagram"></i> Instagram</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        function toggleChatbot() {
+            const chatbotBody = document.getElementById("chatbotBody");
+            const toggleIcon = document.getElementById("chatbotToggleIcon");
+            chatbotBody.style.display = chatbotBody.style.display === "none" ? "block" : "none";
+            toggleIcon.innerHTML = chatbotBody.style.display === "none" ? '<i class="fas fa-chevron-up"></i>' : '<i class="fas fa-chevron-down"></i>';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById("chatbotInput");
+            const messages = document.getElementById("chatbotMessages");
+            const query = input.value.trim();
+            if (!query) return;
+
+            messages.innerHTML += `<p><b>Bạn:</b> ${query}</p>`;
+            input.value = "";
+
+            fetch("http://localhost:5000/chatbot", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ query: query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                messages.innerHTML += `<p><b>Chatbot:</b> ${data.response}</p>`;
+                messages.scrollTop = messages.scrollHeight;
+            })
+            .catch(error => {
+                messages.innerHTML += `<p><b>Chatbot:</b> Lỗi khi xử lý yêu cầu.</p>`;
+                console.error(error);
+            });
+        }
+    </script>
+</body>
+</html>
