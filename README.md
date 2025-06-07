@@ -44,7 +44,7 @@
 3. **Chạy server Node.js:**
    - Mở Terminal
    - Di chuyển đến thư mục chứa project
-   - Gõ lệnh: node server.js
+   - Gõ lệnh: node server.js , có thể sẽ thiếu vài thư viện nên hãy copy lỗi và hỏi Chatgpt để cài nốt nhé , mình cũng ko nhớ :))
 4. **Truy cập ứng dụng**
    - Mở trình duyệt bất kỳ
    - Truy cập địa chỉ: http://localhost:3000
